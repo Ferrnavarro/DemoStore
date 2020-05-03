@@ -44,7 +44,7 @@ namespace DemoStore.API.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<ProductDto>> Post([FromForm] ProductDto productDto)
+        public async Task<ActionResult<ProductDto>> Post([FromForm] NewProductDto productDto)
         {
             if (ModelState.IsValid)
             {

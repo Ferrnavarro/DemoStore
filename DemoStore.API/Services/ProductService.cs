@@ -25,9 +25,9 @@ namespace DemoStore.API.Services
 
 
 
-        public async Task<ProductDto> AddProductAsync(ProductDto productDto, HttpRequest httpRequest)
+        public async Task<ProductDto> AddProductAsync(NewProductDto productDto, HttpRequest httpRequest)
         {
-            var product = productDto.MapProduct();
+            var product = productDto.MapNewProduct();
 
             if (productDto.PictureToUpload.Length > 0)
             {

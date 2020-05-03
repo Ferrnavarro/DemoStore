@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Dtos\UserDtos\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 

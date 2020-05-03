@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -9,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace DemoStore.API.Dtos
 {
-    public class ProductDto
-    {      
-        public int Id { get; set; }
+    public class NewProductDto
+    {     
 
         public string Sku { get; set; }
 
@@ -29,7 +27,6 @@ namespace DemoStore.API.Dtos
         [Required]
         public int NumberAvailable { get; set; }
 
-        public string PictureUri { get; set; }
 
         [JsonIgnore]
         public IFormFile PictureToUpload { get; set; }

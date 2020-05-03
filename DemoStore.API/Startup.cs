@@ -1,17 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DemoStore.API.Interfaces;
+using DemoStore.API.Services;
 using DemoStore.Core.Entities.UserAggregate;
+using DemoStore.Core.Interfaces;
 using DemoStore.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -40,6 +46,11 @@ namespace DemoStore.API
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IFileService, FileService>();
+
+
             services.AddControllers();
 
             services.AddSwaggerGen(options =>
@@ -54,6 +65,15 @@ namespace DemoStore.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles();
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/images")),
+                RequestPath = new PathString("/MyImages")
+            });
 
             app.UseHttpsRedirection();
 
