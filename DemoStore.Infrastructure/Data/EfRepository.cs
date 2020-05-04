@@ -63,5 +63,11 @@ namespace DemoStore.Infrastructure.Data
             return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>().AsQueryable(), spec);
         }
 
+        public async Task<T> GetByIdAsyncAsNoTracking(int id)
+        {
+            var product = await _dbContext.Set<T>().FindAsync(id);
+            _dbContext.Entry(product).State = EntityState.Detached;
+            return product;
+        }
     }
 }

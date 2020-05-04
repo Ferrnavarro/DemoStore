@@ -45,6 +45,7 @@ namespace DemoStore.API.Services
 
         public async Task DeleteProductAsync(ProductDto productDto)
         {
+            _fileService.DeleteFile(productDto.PictureUri);
            await _productRepository.DeleteAsync(productDto.MapProduct());
         }
 
@@ -67,9 +68,17 @@ namespace DemoStore.API.Services
             return products.Select(s => s.MapProductDto()).ToList();                  
         }      
 
-        public async Task<ProductDto> UpdateProductAsync(ProductDto productDto)
+        public async Task<ProductDto> UpdateProductAsync(ProductDto productDto, HttpRequest httpRequest)
         {
             var product = productDto.MapProduct();
+
+            _fileService.DeleteFile(productDto.PictureUri);
+
+            if (productDto.PictureToUpload.Length > 0)
+            {
+                product.PictureUri = await _fileService.SaveFileAsync(productDto.PictureToUpload, httpRequest);
+            }
+
             await _productRepository.UpdateAsync(product);
 
             return await GetProductByIdAsync(productDto.Id);
@@ -100,6 +109,18 @@ namespace DemoStore.API.Services
             products.PaginationInfo.Previous = (products.PaginationInfo.ActualPage == 0) ? "is-disabled" : "";
 
             return products;
+        }
+
+        public async Task<ProductDto> GetProductByIdAsyncAsNoTracking(int id)
+        {
+            var product = await _productRepository.GetByIdAsyncAsNoTracking(id);
+
+            if (product != null)
+            {
+                return product.MapProductDto();
+            }
+
+            return null;
         }
     }
 }

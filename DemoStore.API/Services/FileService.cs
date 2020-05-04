@@ -37,6 +37,19 @@ namespace DemoStore.API.Services
             return string.Empty;
         }
 
+
+        public void DeleteFile(string imageUrl)
+        {
+            var fileName = Path.GetFileName(imageUrl);
+
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", fileName);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
+
         private string GetUrl(HttpRequest request)
         {
             var host = request.Host.ToUriComponent();

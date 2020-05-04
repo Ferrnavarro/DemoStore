@@ -77,30 +77,32 @@ namespace DemoStore.API.Controllers
                     return BadRequest("Id does not match Id in product object");
                 }
 
-                var productInDb = await _productService.GetProductByIdAsync(id);
+                var productInDb = await _productService.GetProductByIdAsyncAsNoTracking(id);
 
                 if (productInDb == null)
                 {
                     return NotFound();
                 }
 
-               var productUpdated =  await _productService.UpdateProductAsync(productDto);
+                productDto.PictureUri = productInDb.PictureUri;
 
+               var productUpdated =  await _productService.UpdateProductAsync(productDto, HttpContext.Request);
 
                 return Ok(new { successMessage = "Product updated", product = productUpdated });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                var exx = ex.ToString();
                 return StatusCode(500, "Internal server error");       
             }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ProductDto>> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var product = await _productService.GetProductByIdAsync(id);
+            var product = await _productService.GetProductByIdAsyncAsNoTracking(id);
 
             if (product == null)
             {
@@ -109,7 +111,7 @@ namespace DemoStore.API.Controllers
 
             await _productService.DeleteProductAsync(product);
 
-            return product;
+            return Ok(new { successMessage = "Product deleted", product }); ;
         }
     }
 }

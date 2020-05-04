@@ -43,7 +43,7 @@ namespace DemoStore.API
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("RemoteConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("LocalConnection"));
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
