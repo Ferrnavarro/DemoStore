@@ -73,6 +73,12 @@ namespace DemoStore.API.Services
             return user;
         }
 
+        public async Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return token;
+        }
+
         public async Task<IReadOnlyList<UserDto>> ListAllUsersAsync()
         {
             var users = await _userRepository.ListAllAsync();
@@ -125,9 +131,17 @@ namespace DemoStore.API.Services
             return new LoginInfo() { Succeeded = false };
         }
 
-        public async Task SendRecoverPasswordMailAsync(RecoverPasswordDto recoverPasswordDto)
+        public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
         {
-            var message = new Message(new string[] { "fer.maganavarro@gmail.com" }, "Test email", "This is the content from our email.");
+            var user = await FindByEmailAsync(resetPasswordDto.Email);
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
+
+            return result;
+        }
+
+        public async Task SendRecoverPasswordMailAsync(RecoverPasswordDto recoverPasswordDto, string url)
+        {
+            var message = new Message(new string[] { recoverPasswordDto.Email }, "Password Recovery", url);
             await _emailSender.SendEmailAsync(message);
         }
 

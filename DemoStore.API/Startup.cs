@@ -83,6 +83,13 @@ namespace DemoStore.API
 
             services.AddControllers();
 
+            services.AddMvc();
+
+            services.AddRazorPages();
+
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromMinutes(15));
+
             services.AddSwaggerGen(options =>
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo Store API", Version = "v1" })
                 );
@@ -96,7 +103,7 @@ namespace DemoStore.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
+            app.UseStaticFiles();          
 
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -126,6 +133,7 @@ namespace DemoStore.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }

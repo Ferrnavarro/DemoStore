@@ -164,13 +164,22 @@ namespace DemoStore.API.Controllers
         [HttpPost("recoverpassword")]
         public async Task<IActionResult> RecoverPassword(RecoverPasswordDto recoverPasswordDto)
         {
-            if (ModelState.IsValid)
-            {
-                await _accountService.SendRecoverPasswordMailAsync(recoverPasswordDto);
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var user = await _accountService.FindByEmailAsync(recoverPasswordDto.Email);
+            if (user == null)
+                return NotFound(); 
+
+            var token = await _accountService.GeneratePasswordResetTokenAsync(user);
+
+            var callback = Url.PageLink("/ResetPassword", values: new { token, email = user.Email }, protocol: Request.Scheme);
+
+            await _accountService.SendRecoverPasswordMailAsync(recoverPasswordDto, callback);               
 
             return Ok();
         }
+        
+
         
 
         private void AddErrors(IdentityResult result)
