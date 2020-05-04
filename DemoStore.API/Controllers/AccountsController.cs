@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using DemoStore.API.Dtos.AccountDtos;
 using DemoStore.API.Infrastructure;
 using DemoStore.API.Interfaces;
+using DemoStore.Core.Entities.UserAggregate;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DemoStore.API.Controllers
 {
@@ -99,7 +104,7 @@ namespace DemoStore.API.Controllers
 
                 if (result.Errors.Count() > 0)
                 {
-                    AddErrors(result);
+                    AddErrors(result); 
                     return BadRequest(ModelState);
                 }
 
@@ -136,6 +141,28 @@ namespace DemoStore.API.Controllers
             return Ok(new { successMessage = "User deleted", user }); ;
         }
 
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginUserDto loginUserDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _accountService.LoginAsync(loginUserDto);
+
+                if (result.Succeeded)
+                {                   
+                    return Ok(new { token = result.Token });
+                }
+
+                ModelState.AddModelError("ErrorMessage", "Invalid username or password.");
+            }
+
+            ModelState.AddModelError("ErrorMessage", "Error in login attempt");
+            return BadRequest(ModelState);
+        }
+
+
+        
 
         private void AddErrors(IdentityResult result)
         {

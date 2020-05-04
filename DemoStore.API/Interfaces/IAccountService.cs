@@ -28,5 +28,15 @@ namespace DemoStore.API.Interfaces
 
         Task<bool> ValidateCredentialsAsync(LoginUserDto user);
 
+        Task<LoginInfo> LoginAsync(LoginUserDto userDto);
+
+    }
+
+
+    public class LoginInfo
+    {
+        public bool Succeeded { get; set; }
+        public string Token { get; set; }
+
     }
 }

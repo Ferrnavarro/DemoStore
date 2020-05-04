@@ -6,9 +6,14 @@ using DemoStore.Core.Entities.UserAggregate;
 using DemoStore.Core.Interfaces;
 using DemoStore.Core.Specifications;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,11 +23,14 @@ namespace DemoStore.API.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _configuration;
 
-        public AccountService(UserManager<ApplicationUser> userManager, IUserRepository userRepository)
+        public AccountService(UserManager<ApplicationUser> userManager, IUserRepository userRepository, IConfiguration configuration)
         {
             _userManager = userManager;
             _userRepository = userRepository;
+            _configuration = configuration;
+                 
         }
 
         public async Task<IdentityResult> CreateUserAsync(NewUserDto newUserDto)
@@ -96,6 +104,24 @@ namespace DemoStore.API.Services
             return users;
         }
 
+        public async Task<LoginInfo> LoginAsync(LoginUserDto userDto)
+        {
+            if (await ValidateCredentialsAsync(userDto))
+            {
+                var user = await FindByEmailAsync(userDto.Email);
+                var tokenString = GenerateJsonWebToken(user);
+
+                return new LoginInfo
+                {
+                    Succeeded = true,
+                    Token = tokenString
+                   
+                };
+            }
+
+            return new LoginInfo() { Succeeded = false };
+        }
+
         public async Task<IdentityResult> UpdateUserAync(UserDto userDto)
         {
             var user = await _userManager.FindByIdAsync(userDto.Id);
@@ -115,5 +141,29 @@ namespace DemoStore.API.Services
             var user = await FindByEmailAsync(userDto.Email);
             return await _userManager.CheckPasswordAsync(user, userDto.Password);
         }
+
+        private string GenerateJsonWebToken(ApplicationUser user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[] {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Sid, user.Id),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+             };
+
+            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+              _configuration["Jwt:Issuer"],
+              claims,
+              expires: DateTime.Now.AddMinutes(120),
+              signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+
+        }
+
     }
 }
