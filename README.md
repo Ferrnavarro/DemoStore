@@ -11,6 +11,11 @@ Está publicada para pruebas en el siguiente [enlace](https://demo-store-api.her
 https://demo-store-api.herokuapp.com/
 ```
 
+Utilizar la siguiente [colección de PostMan](https://www.getpostman.com/collections/706063ee0547fcb7019a):
+```
+https://www.getpostman.com/collections/706063ee0547fcb7019a
+```
+
 ## Local test
 
 1. Clonar el repositorio
