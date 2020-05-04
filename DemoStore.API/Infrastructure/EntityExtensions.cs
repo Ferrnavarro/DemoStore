@@ -1,5 +1,7 @@
 ﻿using DemoStore.API.Dtos;
+using DemoStore.API.Dtos.AccountDtos;
 using DemoStore.Core.Entities.ProductAggregate;
+using DemoStore.Core.Entities.UserAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +44,28 @@ namespace DemoStore.API.Infrastructure
                 Price = newProductDto.Price,
                 NumberAvailable = newProductDto.NumberAvailable,              
             };
+
+        public static ApplicationUser MapNewApplicationUser(this NewUserDto newUserDto) =>
+            new ApplicationUser
+            {
+                Name = newUserDto.Name,
+                PhoneNumber = newUserDto.PhoneNumber,
+                UserName = newUserDto.UserName,
+                BirthDate = newUserDto.BirthDate,
+                Email = newUserDto.Email
+            };
+
+        public static UserDto MapUserDto(this ApplicationUser applicationUser) =>
+            new UserDto
+            {
+                Id = applicationUser.Id,
+                Name = applicationUser.Name,
+                PhoneNumber = applicationUser.PhoneNumber,
+                UserName = applicationUser.UserName,
+                BirthDate = applicationUser.BirthDate,
+                Email = applicationUser.Email
+            };
+
 
     }
 }

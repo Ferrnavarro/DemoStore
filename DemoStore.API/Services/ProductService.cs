@@ -24,7 +24,6 @@ namespace DemoStore.API.Services
         }
 
 
-
         public async Task<ProductDto> AddProductAsync(NewProductDto productDto, HttpRequest httpRequest)
         {
             var product = productDto.MapNewProduct();

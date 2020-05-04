@@ -8,6 +8,9 @@ namespace DemoStore.Core.Entities.UserAggregate
 {
     public class ApplicationUser: IdentityUser, IAggregateRoot
     {
+        public string Name { get; set; }
+
+        public DateTime BirthDate { get; set; }
 
     }
 }
