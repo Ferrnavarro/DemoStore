@@ -30,6 +30,8 @@ namespace DemoStore.API.Interfaces
 
         Task<LoginInfo> LoginAsync(LoginUserDto userDto);
 
+        Task SendRecoverPasswordMailAsync(RecoverPasswordDto recoverPasswordDto);
+
     }
 
 

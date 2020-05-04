@@ -9,6 +9,7 @@ using DemoStore.API.Services;
 using DemoStore.Core.Entities.UserAggregate;
 using DemoStore.Core.Interfaces;
 using DemoStore.Infrastructure.Data;
+using DemoStore.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -73,7 +74,12 @@ namespace DemoStore.API
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
 
             services.AddControllers();
 

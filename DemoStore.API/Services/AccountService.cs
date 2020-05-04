@@ -5,6 +5,7 @@ using DemoStore.API.Interfaces;
 using DemoStore.Core.Entities.UserAggregate;
 using DemoStore.Core.Interfaces;
 using DemoStore.Core.Specifications;
+using DemoStore.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -24,12 +25,14 @@ namespace DemoStore.API.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
 
-        public AccountService(UserManager<ApplicationUser> userManager, IUserRepository userRepository, IConfiguration configuration)
+        public AccountService(UserManager<ApplicationUser> userManager, IUserRepository userRepository, IConfiguration configuration, IEmailSender emailSender)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _configuration = configuration;
+            _emailSender = emailSender;
                  
         }
 
@@ -120,6 +123,12 @@ namespace DemoStore.API.Services
             }
 
             return new LoginInfo() { Succeeded = false };
+        }
+
+        public async Task SendRecoverPasswordMailAsync(RecoverPasswordDto recoverPasswordDto)
+        {
+            var message = new Message(new string[] { "fer.maganavarro@gmail.com" }, "Test email", "This is the content from our email.");
+            await _emailSender.SendEmailAsync(message);
         }
 
         public async Task<IdentityResult> UpdateUserAync(UserDto userDto)

@@ -23,7 +23,6 @@ namespace DemoStore.API.Services
             _fileService = fileService;
         }
 
-
         public async Task<ProductDto> AddProductAsync(NewProductDto productDto, HttpRequest httpRequest)
         {
             var product = productDto.MapNewProduct();
@@ -38,7 +37,7 @@ namespace DemoStore.API.Services
             return product.MapProductDto();
         }
 
-        public Task<int> CountProductAsync(int pageIndex = 0, int itemsPage = 10, string orderBy = "title", string search = "")
+        public Task<int> CountProductAsync(int pageIndex, int itemsPage, string orderBy, string search)
         {
             throw new NotImplementedException();
         }

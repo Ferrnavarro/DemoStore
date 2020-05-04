@@ -10,13 +10,12 @@ namespace DemoStore.API.Interfaces
     public interface IProductService
     {
         Task<ProductDto> GetProductByIdAsync(int id);
-
         Task<ProductDto> GetProductByIdAsyncAsNoTracking(int id);
         Task<IReadOnlyList<ProductDto>> ListAllProductAsync();
-        Task<ProductCatalogDto> ListProductsAsync(int pageIndex = 0, int itemsPage = 10, string orderBy = "name", string search = "");
+        Task<ProductCatalogDto> ListProductsAsync(int pageIndex, int itemsPage, string orderBy, string search);
         Task<ProductDto> AddProductAsync(NewProductDto productDto, HttpRequest httpRequest);
         Task<ProductDto> UpdateProductAsync(ProductDto productDto, HttpRequest httpRequest);
         Task DeleteProductAsync(ProductDto productDto);
-        Task<int> CountProductAsync(int pageIndex = 0, int itemsPage = 10, string orderBy = "name", string search = "");
+        Task<int> CountProductAsync(int pageIndex, int itemsPage, string orderBy, string search);
     }
 }

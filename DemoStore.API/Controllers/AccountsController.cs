@@ -161,7 +161,16 @@ namespace DemoStore.API.Controllers
             return BadRequest(ModelState);
         }
 
+        [HttpPost("recoverpassword")]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordDto recoverPasswordDto)
+        {
+            if (ModelState.IsValid)
+            {
+                await _accountService.SendRecoverPasswordMailAsync(recoverPasswordDto);
+            }
 
+            return Ok();
+        }
         
 
         private void AddErrors(IdentityResult result)
