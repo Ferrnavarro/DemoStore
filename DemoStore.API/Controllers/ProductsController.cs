@@ -19,6 +19,7 @@ namespace DemoStore.API.Controllers
         {
             _productService = productService;
         }
+
         // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<ProductCatalogDto>> Get(int pageIndex = 0, int itemsPage = 10, string orderBy = "name", string search = "")
@@ -29,7 +30,7 @@ namespace DemoStore.API.Controllers
         }
 
         // GET: api/Products/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetProduct")]
         public async Task<ActionResult<ProductDto>> Get(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);

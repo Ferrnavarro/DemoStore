@@ -18,9 +18,9 @@ namespace DemoStore.Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        public Task<int> CountAsync(ISpecification<ApplicationUser> spec)
+        public async Task<int> CountAsync(ISpecification<ApplicationUser> spec)
         {
-            throw new NotImplementedException();
+            return await ApplySpecification(spec).CountAsync();
         }
 
         public async Task<IReadOnlyList<ApplicationUser>> ListAllAsync()

@@ -24,6 +24,8 @@ namespace DemoStore.API.Interfaces
 
         Task<ApplicationUser> FindByEmailAsync(string email);
 
+        Task<UserDto> FindByIdAsync(string id);
+
         Task<bool> ValidateCredentialsAsync(LoginUserDto user);
 
     }

@@ -12,7 +12,7 @@ namespace DemoStore.API.Dtos.AccountDtos
         public string Name { get; set; }
 
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
+        [RegularExpression("([0-9]+)", ErrorMessage = "Invalid Number")]
         public string PhoneNumber { get; set; }
 
         public string UserName { get; set; }

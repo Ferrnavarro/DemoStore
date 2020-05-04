@@ -12,7 +12,8 @@ namespace DemoStore.API.Dtos.AccountDtos
 
         public string Name { get; set; }
 
-        [DataType(DataType.PhoneNumber)]   
+        [DataType(DataType.PhoneNumber)]
+        [RegularExpression("([0-9]+)", ErrorMessage = "Invalid Number")]
         public string PhoneNumber { get; set; }
 
         public string UserName { get; set; }
@@ -22,9 +23,6 @@ namespace DemoStore.API.Dtos.AccountDtos
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+     
     }
 }

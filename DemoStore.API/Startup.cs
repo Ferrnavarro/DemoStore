@@ -42,12 +42,17 @@ namespace DemoStore.API
                 options.UseSqlServer(Configuration.GetConnectionString("LocalConnection"));
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IFileService, FileService>();
 
 

@@ -44,6 +44,18 @@ namespace DemoStore.API.Services
             return await _userManager.FindByEmailAsync(email);
         }
 
+        public async Task<UserDto> FindByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                return user.MapUserDto();
+            }
+
+            return null;
+        }
+
         public async Task<ApplicationUser> FindByUserNameAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -84,9 +96,18 @@ namespace DemoStore.API.Services
             return users;
         }
 
-        public Task<IdentityResult> UpdateUserAync(UserDto userDto)
+        public async Task<IdentityResult> UpdateUserAync(UserDto userDto)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(userDto.Id);
+
+            user.Email = userDto.Email;
+            user.UserName = userDto.UserName;
+            user.BirthDate = userDto.BirthDate;
+            user.PhoneNumber = userDto.PhoneNumber;
+            user.Name = userDto.Name;
+
+            var result = await _userManager.UpdateAsync(user);
+            return result;
         }
 
         public async Task<bool> ValidateCredentialsAsync(LoginUserDto userDto)

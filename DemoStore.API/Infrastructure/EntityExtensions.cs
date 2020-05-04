@@ -67,5 +67,17 @@ namespace DemoStore.API.Infrastructure
             };
 
 
+        public static ApplicationUser MapUser(this UserDto userDto) =>
+            new ApplicationUser
+            {
+                Id = userDto.Id,
+                Name = userDto.Name,
+                PhoneNumber = userDto.PhoneNumber,
+                UserName = userDto.UserName,
+                BirthDate = userDto.BirthDate,
+                Email = userDto.Email
+            };
+
+
     }
 }
